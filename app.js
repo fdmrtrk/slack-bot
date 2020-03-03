@@ -8,7 +8,7 @@ const slackBot = new SlackBot({
 
 slackBot.on("start", () => {
   const params = {
-    icon_emoji: ":smiley:"
+    icon_emoji: ":robot_face:"
   };
   slackBot.postMessageToChannel(
     "general",
@@ -16,3 +16,12 @@ slackBot.on("start", () => {
     params
   );
 });
+
+// Handle messages
+slackBot.on("message", data=>{
+	data.type === "message" ? console.log(data) : console.log("it is not message", data);
+
+})
+
+// Handle errors
+slackBot.on("error", (err)=> console.log(err))
