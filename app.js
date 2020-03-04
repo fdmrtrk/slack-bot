@@ -1,27 +1,49 @@
+require("dotenv").config({ path: __dirname + "/.env" });
 const SlackBot = require("slackbots");
-const axios = require("axios");
+const { detectLanguage } = require("./handlers");
 
 const slackBot = new SlackBot({
-  token: "xoxb-979163994532-968298051763-Ax8C9CtwMOCne4UgagwVOkCM",
+  token: process.env["SLACK_BOT_API"],
   name: "observer"
 });
-
+const params = {
+  icon_emoji: ":robot_face:"
+};
+//Get channels
+let listOfChannels;
 slackBot.on("start", () => {
-  const params = {
-    icon_emoji: ":robot_face:"
-  };
-  slackBot.postMessageToChannel(
-    "general",
-    "Please write your message in English",
-    params
-  );
+  console.log("Slack bot is online");
+  slackBot
+    .getChannels()
+    .then(data => {
+      listOfChannels = data;
+    })
+    .catch(err => {
+      throw new Error("Error while fetching channels!" , err)
+    });
 });
 
 // Handle messages
-slackBot.on("message", data=>{
-	data.type === "message" ? console.log(data) : console.log("it is not message", data);
-
-})
+slackBot.on("message", async data => {
+  if (data.type !== "message") {
+    return;
+  }
+  let channelName;
+  channelName = listOfChannels.channels.filter(ch => data.channel === ch.id)[0];
+  console.log("Slack bot is online on this channel: ", channelName)
+  try {
+    let language = await detectLanguage(data.text);
+    if (language.origin !== "en") {
+      slackBot.postMessageToChannel(
+        channelName.name,
+        `Hello <@${data.user}>, please write your message in english. Your message: ${language.text}`,
+        params
+      );
+    }
+  } catch (err) {
+    console.log("Slack bot is disconnected", err);
+  }
+});
 
 // Handle errors
-slackBot.on("error", (err)=> console.log(err))
+slackBot.on("error", err => console.log(err));

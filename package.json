@@ -18,7 +18,12 @@
   },
   "homepage": "https://github.com/fdmrtrk/slack-bot#readme",
   "dependencies": {
+    "@google-cloud/translate": "^5.2.0",
+    "@vitalets/google-translate-api": "^3.0.0",
     "axios": "^0.19.2",
     "slackbots": "^1.2.0"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0"
   }
 }
