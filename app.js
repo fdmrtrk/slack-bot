@@ -19,7 +19,7 @@ slackBot.on("start", () => {
       listOfChannels = data;
     })
     .catch(err => {
-      throw new Error("Error while fetching channels!" , err)
+      throw new Error("Error while fetching channels!", err);
     });
 });
 
@@ -30,7 +30,7 @@ slackBot.on("message", async data => {
   }
   let channelName;
   channelName = listOfChannels.channels.filter(ch => data.channel === ch.id)[0];
-  console.log("Slack bot is online on this channel: ", channelName)
+  console.log("Slack bot is online on this channel: ", channelName);
   try {
     let language = await detectLanguage(data.text);
     if (language.origin !== "en") {

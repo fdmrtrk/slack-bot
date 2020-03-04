@@ -10,6 +10,6 @@ const detectLanguage = async message => {
   } catch (err) {
     throw new Error(err);
   }
-}
+};
 
 exports.detectLanguage = detectLanguage;
